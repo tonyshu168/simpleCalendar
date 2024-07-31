@@ -1,0 +1,67 @@
+:root {
+--color-primary: #008bd6;
+--color-success: #4cd964;
+--color-warning: #f0ad4e;
+--color-error: #dd524d;
+
+/* 文字基本颜色 */
+--text-color: #333;
+--text-color-primary: #008BD6;
+--text-color-inverse: #fff;
+--text-color-grey: #999;
+--text-color-placeholder: #808080;
+--text-color-disable: #c0c0c0;
+
+/* 背景颜色 */
+--bg-color: #fff;
+--bg-color-grey: #f8f8f8;
+--bg-color-hover: #f1f1f1;
+--bg-color-mask: rgba(0, 0, 0, 0.4);
+
+/* 边框颜色 */
+--border-color: #c8c7cc;
+
+/* 尺寸变量 */
+
+/* 文字尺寸 */
+--font-size-sm: 12px;
+--font-size-base: 14px;
+--font-size-lg: 16;
+
+/* 图片尺寸 */
+--img-size-sm: 20px;
+--img-size-base: 26px;
+--img-size-lg: 40px;
+
+/* Border Radius */
+--border-radius-sm: 2px;
+--border-radius-base: 3px;
+--border-radius-lg: 6px;
+--border-radius-circle: 50%;
+
+/* 水平间距 */
+--spacing-row-sm: 5px;
+--spacing-row-base: 10px;
+--spacing-row-lg: 15px;
+
+/* 垂直间距 */
+--spacing-col-sm: 4px;
+--spacing-col-base: 8px;
+--spacing-col-lg: 12px;
+
+/* 透明度 */
+--opacity-disabled: 0.3;
+
+/* 文章场景相关 */
+--color-title: #2c405a;
+--font-size-title: 20px;
+--color-subtitle: #555; 
+--font-size-subtitle: 18px;
+--color-paragraph: #3f536e;
+--font-size-paragraph: 15px;
+
+/* button hover color */
+--button-hover-bg-color: #79bbff;
+--button-hover-text-color: #fff;
+}
+
