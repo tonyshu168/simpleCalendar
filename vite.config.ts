@@ -10,4 +10,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  build: {
+    lib: {
+      entry: 'src/index.ts',
+      formats: ['cjs', 'es']
+    },
+    rollupOptions: {
+      external: ['vue']
+    }
+  },
 })

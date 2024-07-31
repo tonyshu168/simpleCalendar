@@ -153,10 +153,6 @@ html {
   border-bottom: 1px solid #999;
 }
 
-.selected {
-  color: #1890ff;
-  border-bottom: 1px solid #1890ff;
-}
 
 .p_title>i {
   padding-right: 10px;
