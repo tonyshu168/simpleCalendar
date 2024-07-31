@@ -15,9 +15,11 @@
   ],
   "author": "tonyshu168 <493397276@qq.com>",
   "license": "MIT",
+  "main": "dist/simplecalendar.cjs",
+  "module": "dist/simplecalendar.js",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
@@ -30,6 +32,7 @@
     "less": "^4.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.4",
+    "vite-plugin-dts": "4.0.0-beta.2",
     "vue-tsc": "^2.0.24"
   }
 }

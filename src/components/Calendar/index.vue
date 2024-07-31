@@ -1,4 +1,5 @@
 <template>
+  <section class="calendar-container">
   <div class="calendar">
     <!-- 年份 月份 -->
     <div class="months">
@@ -19,7 +20,7 @@
     <!-- 日期 -->
     <ul class="days">
       <li
-        v-for="dayobject in days"
+        v-for="dayobject in (isShowFull ? days : daysForWeek)"
         :key=dayobject.lunarDate
         :class="{'active': dayobject.isToday, 'selected': curDayMsg.date === dayobject.date && !dayobject.isToday}"
         @click="getClickDay(dayobject)"
@@ -38,7 +39,9 @@
         <slot></slot>
       </li>
     </ul>
+      <ArrowDown @click="triggleFull"></ArrowDown>
   </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -49,9 +52,11 @@ export default {
 
 <script setup lang="ts">
 import { ref, defineProps, withDefaults, defineEmits, onMounted } from 'vue';
+import ArrowDown from '../ArrowDown/index.vue';
 import calendar from '../../utils/calendarDate';
 import { formatDate, showLunar, showToday, formatDay } from '../../utils/index';
 import { PropsType } from './types';
+import { LunarDateInfoType } from '../../utils/types';
 
 const props = withDefaults(defineProps<PropsType>(), {
   showlunar: false,
@@ -62,10 +67,12 @@ const currentDay = ref(1);
 const currentMonth = ref(1);
 const currentYear = ref(2024);
 const currentWeek = ref(1);
-const days = ref<Array<any>>([]);
+const days = ref<Array<LunarDateInfoType>>([]);
 const curDayMsg = ref<any>();
 const weekDays = ref(['一', '二', '三', '四', '五', '六', '日']);
 const weekDaysFromSun = ref(['日', '一', '二', '三', '四', '五', '六']);
+const isShowFull = ref(1); // 是否为全显示，默认为全部显示
+const daysForWeek = ref<Array<LunarDateInfoType>>([]);
 const emit = defineEmits<{
   (event: 'dayMsg', curDayMsg: Array<any>): void
 }>();
@@ -128,7 +135,11 @@ function preMonth() {
     currentMonth.value = 12;
     currentYear.value = currentYear.value - 1;
   }
-  initData(formatDate(currentYear.value, currentMonth.value, 1))
+  initData(formatDate(currentYear.value, currentMonth.value, 1));
+
+  if (!isShowFull.value) {
+    getDaysForWeek();
+  }
 }
 
 // 下一月
@@ -141,6 +152,27 @@ function nextMonth() {
   }
 
   initData(formatDate(currentYear.value, currentMonth.value, 1));
+  if (!isShowFull.value) {
+    getDaysForWeek();
+  }
+}
+
+// 获取一周的日期
+function getDaysForWeek() {
+  let idxForSelected = days.value.findIndex(dateInfo => {
+    return dateInfo.date === curDayMsg.value.date;
+  });
+  idxForSelected = idxForSelected === -1 ? 0 : idxForSelected;
+
+  const currentRow = Math.floor(idxForSelected / 7);
+  const startIdx = currentRow * 7;
+  const weekDays: Array<LunarDateInfoType> = [];
+
+  for (let i = 0; i < 7; i++) {
+    weekDays.push(days.value[startIdx + i]);
+  }
+console.log(weekDays)
+  daysForWeek.value = weekDays;
 }
 
 // 点击日期
@@ -148,6 +180,14 @@ function getClickDay(el: any) {
   curDayMsg.value = el;
 
   emit('dayMsg', el)
+}
+
+// 日历面板展开或收起
+function triggleFull(isDown: boolean) {
+  if (!isDown) {
+    getDaysForWeek();
+  }
+  isShowFull.value = Number(isDown);  
 }
 
 onMounted(() => {
@@ -161,6 +201,7 @@ ul li {
   margin: 0;
   padding: 0;
 }
+.calendar-container {
 .calendar {
   font-size: 0.75rem;
   width: 100%;
@@ -303,5 +344,6 @@ ul li {
     margin-top: 6%;
     color: #999;
   }
+}
 }
 </style>
