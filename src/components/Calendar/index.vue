@@ -347,11 +347,11 @@ ul li {
     text-align: center;
   }
   .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    justify-items: center;
     margin: 0;
     padding: 1% 0;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
   }
   .vishidden {
     visibility: hidden;
@@ -359,7 +359,7 @@ ul li {
   .days li {
     position: relative;
     display: inline-block;
-    width: 14.2%;
+    width: 45px;
     margin-bottom: 5%;
     margin-top: 2%;
     text-align: center;

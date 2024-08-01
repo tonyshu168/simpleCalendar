@@ -17,6 +17,7 @@
   "license": "MIT",
   "main": "dist/simplecalendar.cjs",
   "module": "dist/simplecalendar.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
