@@ -36,11 +36,11 @@
           v-if="showlunar"
           class="idaycn"
         >{{ showLunar(dayobject) }}</div>
-        <slot></slot>
       </li>
     </ul>
-      <ArrowDown @click="triggleFull"></ArrowDown>
+    <ArrowDown @click="triggleFull"></ArrowDown>
   </div>
+  <slot></slot>
   </section>
 </template>
 
@@ -51,7 +51,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { ref, defineProps, withDefaults, defineEmits, onMounted } from 'vue';
+import { ref, defineProps, withDefaults, defineEmits, onMounted, nextTick, watch } from 'vue';
 import ArrowDown from '../ArrowDown/index.vue';
 import calendar from '../../utils/calendarDate';
 import { formatDate, showLunar, showToday, formatDay } from '../../utils/index';
@@ -63,6 +63,7 @@ const props = withDefaults(defineProps<PropsType>(), {
   lines: 5,
   fromsun: false,
 });
+const linesRef = ref(5); // 需要显示的行数
 const currentDay = ref(1);
 const currentMonth = ref(1);
 const currentYear = ref(2024);
@@ -72,10 +73,17 @@ const curDayMsg = ref<any>();
 const weekDays = ref(['一', '二', '三', '四', '五', '六', '日']);
 const weekDaysFromSun = ref(['日', '一', '二', '三', '四', '五', '六']);
 const isShowFull = ref(1); // 是否为全显示，默认为全部显示
+const isMatchForPack = ref(true); // 日历面板收起时，如没匹配到curDayMsg的日期，则为false
 const daysForWeek = ref<Array<LunarDateInfoType>>([]);
 const emit = defineEmits<{
   (event: 'dayMsg', curDayMsg: Array<any>): void
 }>();
+watch(currentMonth, (v) => {
+  if (props.lines <= 5) {
+    calculateLines(v);
+    // updateCurDayMsg();
+  }
+})
 
 function initData(cur: string = '') {
   let now, curMonthStartDay, curMonthStartWeek, curPageStartDay
@@ -107,7 +115,7 @@ function initData(cur: string = '') {
   // 循环获取日历当前页所有日期（7*this.lines \5/6\）
   days.value = [];
 
-  for (let i = 0; i < props.lines * 7; i++) {
+  for (let i = 0; i < calculateLines(now.getMonth() + 1) * 7; i++) {
     let year = new Date(
       curPageStartDay + i * 24 * 60 * 60 * 1000
     ).getFullYear()
@@ -136,9 +144,9 @@ function preMonth() {
     currentYear.value = currentYear.value - 1;
   }
   initData(formatDate(currentYear.value, currentMonth.value, 1));
-
+  updateCurDayMsg();
   if (!isShowFull.value) {
-    getDaysForWeek();
+    getDaysForWeek(false);
   }
 }
 
@@ -152,17 +160,23 @@ function nextMonth() {
   }
 
   initData(formatDate(currentYear.value, currentMonth.value, 1));
+  updateCurDayMsg();
   if (!isShowFull.value) {
-    getDaysForWeek();
+    getDaysForWeek(false);
   }
 }
 
 // 获取一周的日期
-function getDaysForWeek() {
+function getDaysForWeek(foldAndUnFold: boolean = true) {
   let idxForSelected = days.value.findIndex(dateInfo => {
-    return dateInfo.date === curDayMsg.value.date;
+    return foldAndUnFold ? dateInfo.date === curDayMsg.value.date
+      :dateInfo.cDay === curDayMsg.value.cDay && dateInfo.cMonth === currentMonth.value;
   });
-  idxForSelected = idxForSelected === -1 ? 0 : idxForSelected;
+
+  if (idxForSelected === -1) {
+    const lines = calculateLines(curDayMsg.value.cMonth);
+    idxForSelected = lines === 6 ? 5 : 4;
+  }
 
   const currentRow = Math.floor(idxForSelected / 7);
   const startIdx = currentRow * 7;
@@ -171,8 +185,22 @@ function getDaysForWeek() {
   for (let i = 0; i < 7; i++) {
     weekDays.push(days.value[startIdx + i]);
   }
-console.log(weekDays)
+
   daysForWeek.value = weekDays;
+}
+
+function updateCurDayMsg() {
+  const idxForSelected = days.value.findIndex(dateInfo => {
+    return dateInfo.cDay === curDayMsg.value.cDay && dateInfo.cMonth === currentMonth.value;
+  });
+
+  const { cDay, cMonth, cYear } = curDayMsg.value;
+  const curDays = calendar.solarDays(cYear, cMonth);
+  const diffNumber = curDays - cDay; // 相差的天数，如当前是29，本月有31天，那就是2天
+  const calcDays = calendar.solarDays(currentYear.value, currentMonth.value); // 上一个月，或下一个月时，这个月的天数
+  const calcDay = idxForSelected === -1 ? calcDays - diffNumber : cDay; 
+
+  curDayMsg.value = calendar.solar2lunar(currentYear.value, currentMonth.value, calcDay);
 }
 
 // 点击日期
@@ -185,13 +213,26 @@ function getClickDay(el: any) {
 // 日历面板展开或收起
 function triggleFull(isDown: boolean) {
   if (!isDown) {
-    getDaysForWeek();
+    getDaysForWeek(true);
   }
   isShowFull.value = Number(isDown);  
 }
 
+// 计算当月是5行显示还是6行显示
+function calculateLines(month: number) {
+  const includsForLines6 = calendar.linesFormMonth.find(obj => obj.month === month);
+  
+  return includsForLines6 ? 6 : 5;
+}
+
 onMounted(() => {
   initData();
+  if (props.lines > 5) {
+    linesRef.value = props.lines;
+  } 
+  else {
+    linesRef.value = calculateLines(curDayMsg.value.cMonth);
+  }
 })
 </script>
 

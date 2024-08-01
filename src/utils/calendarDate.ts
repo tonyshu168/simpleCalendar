@@ -642,12 +642,17 @@ export default {
   ],
 
   /**
+   * 那些月份需要6行才能显示
+   */
+  linesFormMonth: [{month: 3, lines: 6}, {month: 6, lines: 6}],
+
+  /**
    * 返回农历y年一整年的总天数
    * @param lunar Year
    * @return Number
    * @eg:var count = calendar.lYearDays(1987) ;//count=387
    */
-  lYearDays: function(y) {
+  lYearDays: function(y: number) {
     var i,
       sum = 348
     for (i = 0x8000; i > 0x8; i >>= 1) {
