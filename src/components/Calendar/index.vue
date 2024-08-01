@@ -36,6 +36,7 @@
           v-if="showlunar"
           class="idaycn"
         >{{ showLunar(dayobject) }}</div>
+        <span class="topic" v-if="!dayobject.isToday && dayobject.date !== curDayMsg.date && calculateItems(dayobject.date)"></span>
       </li>
     </ul>
     <ArrowDown @click="triggleFull"></ArrowDown>
@@ -51,11 +52,11 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { ref, defineProps, withDefaults, defineEmits, onMounted, nextTick, watch } from 'vue';
+import { ref, defineProps, withDefaults, defineEmits, onMounted, watch, defineExpose } from 'vue';
 import ArrowDown from '../ArrowDown/index.vue';
 import calendar from '../../utils/calendarDate';
-import { formatDate, showLunar, showToday, formatDay } from '../../utils/index';
-import { PropsType } from './types';
+import { formatDate, showLunar, showToday, formatDay, hasItems } from '../../utils/index';
+import { PropsType, ItemsType } from './types';
 import { LunarDateInfoType } from '../../utils/types';
 
 const props = withDefaults(defineProps<PropsType>(), {
@@ -75,8 +76,12 @@ const weekDaysFromSun = ref(['日', '一', '二', '三', '四', '五', '六']);
 const isShowFull = ref(1); // 是否为全显示，默认为全部显示
 const isMatchForPack = ref(true); // 日历面板收起时，如没匹配到curDayMsg的日期，则为false
 const daysForWeek = ref<Array<LunarDateInfoType>>([]);
+const items = ref<Array<ItemsType>>([]); // 当前月显示的所有日期所对应的事项
 const emit = defineEmits<{
-  (event: 'dayMsg', curDayMsg: Array<any>): void
+  (event: 'dayMsg', curDayMsg: Array<any>): void,
+  (event: 'preMonthClick'): void,
+  (event: 'nextMonthClick'): void,
+  (event: 'todayClick'): void,
 }>();
 watch(currentMonth, (v) => {
   if (props.lines <= 5) {
@@ -86,6 +91,7 @@ watch(currentMonth, (v) => {
 })
 
 function initData(cur: string = '') {
+  emit('todayClick');
   let now, curMonthStartDay, curMonthStartWeek, curPageStartDay
   if (cur) {
     now = new Date(cur)
@@ -137,6 +143,7 @@ function initData(cur: string = '') {
 }
 
 function preMonth() {
+  emit('preMonthClick');
   currentMonth.value = currentMonth.value - 1;
 
   if (currentMonth.value === 0) {
@@ -152,6 +159,7 @@ function preMonth() {
 
 // 下一月
 function nextMonth() {
+  emit('nextMonthClick');
   currentMonth.value = currentMonth.value + 1;
 
   if (currentMonth.value === 13) {
@@ -225,6 +233,15 @@ function calculateLines(month: number) {
   return includsForLines6 ? 6 : 5;
 }
 
+function calculateItems(date: string) {
+  return hasItems(date, items.value);
+}
+
+// 更新"事项"
+function updateItems(newItems: Array<any>) {
+  items.value = newItems;
+}
+
 onMounted(() => {
   initData();
   if (props.lines > 5) {
@@ -234,6 +251,12 @@ onMounted(() => {
     linesRef.value = calculateLines(curDayMsg.value.cMonth);
   }
 })
+
+defineExpose({
+  currentDays: days,
+  items: items,
+  updateItems
+});
 </script>
 
 <style lang="less" scoped>
@@ -334,6 +357,7 @@ ul li {
     visibility: hidden;
   }
   .days li {
+    position: relative;
     display: inline-block;
     width: 14.2%;
     margin-bottom: 5%;
@@ -393,6 +417,15 @@ ul li {
     top: -2px;
     margin-top: 6%;
     color: #999;
+  }
+
+  .topic {
+    position: absolute;
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #f00;
   }
 }
 }

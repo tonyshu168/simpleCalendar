@@ -1,4 +1,5 @@
 import { LunarDateInfoType } from './types';
+import { ItemsType } from '../components/Calendar/types';
 
 export function formatDate(year: number, month: number, day: number) {
   let tempMonth = '' + month;
@@ -40,4 +41,15 @@ export function showToday(dateInfo: LunarDateInfoType): string {
 
 export function formatDay(day: number) {
   return day < 10 ? `0${day}` : String(day);
+}
+
+export function hasItems(date: string, items: Array<ItemsType>) {
+  let hasItems = 0;
+  const item = items.find(item => item.date === date);
+
+  if (item && item.items.length) {
+    hasItems = 1;
+  }
+
+  return hasItems;
 }
