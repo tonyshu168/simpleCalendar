@@ -1,6 +1,8 @@
 <template>
   <section>
-  <Calendar showlunar :fromsun="true" @dayMsg="getDayMsg" />
+  <Calendar showlunar :fromsun="true" @dayMsg="getDayMsg" >
+    <div>dsssssssssddfwdfasdff</div>
+  </Calendar>
   </section>
 </template>
 

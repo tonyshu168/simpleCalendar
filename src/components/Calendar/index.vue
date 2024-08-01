@@ -237,12 +237,19 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
+* {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+}
 ul li {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 .calendar-container {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.1),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
 .calendar {
   font-size: 0.75rem;
   width: 100%;
@@ -250,8 +257,10 @@ ul li {
   margin: 0 auto;
   padding: 5px;
   overflow: hidden;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.1),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+  .arrow-down {
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.05)
+  }
 
   .months {
     display: flex;
