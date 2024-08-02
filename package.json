@@ -3,6 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tonyshu168/simpleCalendar.git"
+  },
   "description": "Simple calendar with lunar calendar",
   "keywords": [
     "calendar",
@@ -10,9 +14,13 @@
     "Lunar calendar"
   ],
   "author": "tonyshu168 <493397276@qq.com>",
+  "license": "MIT",
+  "main": "dist/simplecalendar.cjs",
+  "module": "dist/simplecalendar.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
@@ -22,8 +30,10 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@vitejs/plugin-vue": "^5.0.5",
+    "less": "^4.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.4",
+    "vite-plugin-dts": "4.0.0-beta.2",
     "vue-tsc": "^2.0.24"
   }
 }
