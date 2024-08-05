@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/tonyshu168/simpleCalendar.git"
   },
-  "description": "Simple calendar with lunar calendar",
+  "description": "Simple calendar with lunar calendar, When there is an event on a particular day of the calendar, a small red dot appears at the bottom of the day",
   "keywords": [
     "calendar",
     "simple calendar",
@@ -17,7 +17,12 @@
   "license": "MIT",
   "main": "dist/simplecalendar.cjs",
   "module": "dist/simplecalendar.js",
+  "unpkg": "dist/simplecalendar-1.0.0.js",
+  "jsdeliver": "dist/simplecalendar-1.0.0.js",
   "types": "dist/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/tonyshu168/simpleCalendar/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
