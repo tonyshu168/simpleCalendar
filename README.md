@@ -95,7 +95,7 @@ The todayClick: Custom events, callback events from the today.
 
 #### Component export values
 ```
-1. Export days: All dates of the calendar are currently displayed。
+1. Export days: All dates of the calendar are currently displayed.
 2. Export items: Items corresponding to all dates displayed in the current month.
 3. Export updateItems: This is how to update the items corresponding to all dates displayed in the current month.
 ```
