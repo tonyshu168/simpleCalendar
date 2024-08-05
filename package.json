@@ -11,7 +11,8 @@
   "keywords": [
     "calendar",
     "simple calendar",
-    "Lunar calendar"
+    "Lunar calendar",
+    "Vue3 calendar components"
   ],
   "author": "tonyshu168 <493397276@qq.com>",
   "license": "MIT",
